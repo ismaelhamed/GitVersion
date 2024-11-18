@@ -142,9 +142,12 @@ public class SemanticVersion : IFormattable, IComparable<SemanticVersion>, IEqua
         }
 
         version = match.Groups["version"].Value;
-        return format == SemanticVersionFormat.Strict
-            ? TryParseStrict(version, out semanticVersion)
-            : TryParseLoose(version, out semanticVersion);
+        return format switch
+        {
+            SemanticVersionFormat.Strict => TryParseStrict(version, out semanticVersion),
+            SemanticVersionFormat.Pep440 => TryParsePep440(version, out semanticVersion),
+            _ => TryParseLoose(version, out semanticVersion)
+        };
     }
 
     private static bool TryParseStrict(string version, [NotNullWhen(true)] out SemanticVersion? semanticVersion)
@@ -196,6 +199,28 @@ public class SemanticVersion : IFormattable, IComparable<SemanticVersion>, IEqua
             Patch = parsed.Groups["Patch"].Success ? long.Parse(parsed.Groups["Patch"].Value) : 0,
             PreReleaseTag = SemanticVersionPreReleaseTag.Parse(parsed.Groups["Tag"].Value),
             BuildMetaData = semanticVersionBuildMetaData
+        };
+
+        return true;
+    }
+
+    private static bool TryParsePep440(string version, [NotNullWhen(true)] out SemanticVersion? semanticVersion)
+    {
+        var parsed = RegexPatterns.SemanticVersion.ParsePep440Regex.Match(version);
+
+        if (!parsed.Success)
+        {
+            semanticVersion = null;
+            return false;
+        }
+
+        semanticVersion = new()
+        {
+            Major = long.Parse(parsed.Groups["major"].Value),
+            Minor = parsed.Groups["minor"].Success ? long.Parse(parsed.Groups["minor"].Value) : 0,
+            Patch = parsed.Groups["patch"].Success ? long.Parse(parsed.Groups["patch"].Value) : 0,
+            PreReleaseTag = SemanticVersionPreReleaseTag.Parse(parsed.Groups["pre"].Value),
+            BuildMetaData = SemanticVersionBuildMetaData.Parse(parsed.Groups["local"].Value)
         };
 
         return true;

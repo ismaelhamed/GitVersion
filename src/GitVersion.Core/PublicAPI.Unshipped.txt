@@ -9,6 +9,7 @@ GitVersion.Common.IRepositoryStore.UncommittedChangesCount.get -> int
 GitVersion.Configuration.EffectiveConfiguration.VersionInBranchPattern.get -> string?
 GitVersion.Configuration.IGitVersionConfiguration.TagPrefixPattern.get -> string?
 GitVersion.Git.IGitRepository.UncommittedChangesCount() -> int
+GitVersion.SemanticVersionFormat.Pep440 = 2 -> GitVersion.SemanticVersionFormat
 static GitVersion.Configuration.ReferenceNameExtensions.TryGetSemanticVersion(this GitVersion.Git.ReferenceName! source, out (GitVersion.SemanticVersion! Value, string? Name) result, GitVersion.Configuration.IGitVersionConfiguration! configuration) -> bool
 static GitVersion.Extensions.DictionaryExtensions.GetOrAdd(this System.Collections.Concurrent.ConcurrentDictionary<string!, System.Text.RegularExpressions.Regex!>! dict, string! pattern) -> System.Text.RegularExpressions.Regex!
 static GitVersion.Extensions.DictionaryExtensions.GetOrAdd<TKey, TValue>(this System.Collections.Generic.Dictionary<TKey, TValue>! dict, TKey key, System.Func<TValue>! getValue) -> TValue

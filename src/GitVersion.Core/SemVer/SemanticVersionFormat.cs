@@ -3,5 +3,6 @@ namespace GitVersion;
 public enum SemanticVersionFormat
 {
     Strict,
-    Loose
+    Loose,
+    Pep440
 }
